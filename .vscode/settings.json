@@ -1,0 +1,30 @@
+{
+    "files.associations": {
+        "*.cpp": "cpp",
+        "iostream": "cpp",
+        "algorithm": "cpp",
+        "vector": "cpp",
+        "queue": "cpp",
+        "ostream": "cpp",
+        "limits": "cpp",
+        "deque": "cpp",
+        "exception": "cpp",
+        "ios": "cpp",
+        "istream": "cpp",
+        "list": "cpp",
+        "map": "cpp",
+        "memory": "cpp",
+        "sstream": "cpp",
+        "stack": "cpp",
+        "streambuf": "cpp",
+        "tuple": "cpp",
+        "unordered_map": "cpp",
+        "unordered_set": "cpp",
+        "utility": "cpp",
+        "xhash": "cpp",
+        "xiosbase": "cpp",
+        "xstring": "cpp",
+        "xtree": "cpp",
+        "thread": "cpp"
+    }
+}
