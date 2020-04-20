@@ -5,85 +5,60 @@
 
 using namespace std;
 
-class UnionFind {
-public:
-    UnionFind(vector<vector<char>>& grid) {
-        count = 0;
-        int m = grid.size();
-        int n = grid[0].size();
-        for (int i = 0; i < m; ++i) {
-            for (int j = 0; j < n; ++j) {
-                if (grid[i][j] == '1') {
-                    parent.push_back(i * n + j);
-                    ++count;
-                }
-                else {
-                    parent.push_back(-1);
-                }
-                rank.push_back(0);
-            }
-        }
-    }
-
-    int find(int i) {
-        if (parent[i] != i) {
-            parent[i] = find(parent[i]);
-        }
-        return parent[i];
-    }
-
-    void unite(int x, int y) {
-        int rootx = find(x);
-        int rooty = find(y);
-        if (rootx != rooty) {
-            if (rank[rootx] < rank[rooty]) {
-                swap(rootx, rooty);
-            }
-            parent[rooty] = rootx;
-            if (rank[rootx] == rank[rooty]) rank[rootx] += 1;
-            --count;
-        }
-    }
-
-    int getCount() const {
-        return count;
-    }
-
-private:
-    vector<int> parent;
-    vector<int> rank;
-    int count;
-};
-
 class Solution {
 public:
-    int numIslands(vector<vector<char>>& grid) {
-        int nr = grid.size();
-        if (!nr) return 0;
-        int nc = grid[0].size();
-
-        UnionFind uf(grid);
-        int num_islands = 0;
-        for (int r = 0; r < nr; ++r) {
-            for (int c = 0; c < nc; ++c) {
-                if (grid[r][c] == '1') {
-                    grid[r][c] = '0';
-                    if (r - 1 >= 0 && grid[r-1][c] == '1') uf.unite(r * nc + c, (r-1) * nc + c);
-                    if (r + 1 < nr && grid[r+1][c] == '1') uf.unite(r * nc + c, (r+1) * nc + c);
-                    if (c - 1 >= 0 && grid[r][c-1] == '1') uf.unite(r * nc + c, r * nc + c - 1);
-                    if (c + 1 < nc && grid[r][c+1] == '1') uf.unite(r * nc + c, r * nc + c + 1);
-                }
+    bool isValid(string s) {
+        stack<int> save;
+        for(auto x : s){
+            int temp = 0;
+            if(x == '{') temp = -3;
+            if(x == '}') temp = 3;
+            if(x == '(') temp = -2;
+            if(x == ')') temp = 2;
+            if(x == '[') temp = -1;
+            if(x == ']') temp = 1;
+            if(temp < 0) save.push(temp);
+            else if(temp > 0){
+                if(save.empty() || temp + save.top() != 0) return false;
+                else save.pop();
             }
         }
-
-        return uf.getCount();
+        if(!save.empty()) return false;
+        return true;
     }
 };
 
 int main(){
-    vector<vector<char>> grid = {{'1','1','1','1','0'},{'1','1','0','1','0'},{'1','1','0','0','0'},{'0','0','0','0','0'}};
-    Solution result;
-    int out = result.numIslands(grid);
-    cout << out << endl;
+    string v = "/../";
+    stack<string> save;
+    vector<int> index;
+    int position = 0;
+    while((position = v.find("/", position)) != string::npos){
+        index.push_back(position);
+        position++;
+    }
+    for(int i = 0; i < index.size(); ++i){
+        int res;
+        if(i == index.size() - 1){
+            if(index[i] != v.size() - 1)
+                res = v.size() - index[i];
+            else continue;
+        }
+        else res = index[i+1] - index[i];
+        auto temp = v.substr(index[i], res);
+        if(temp == "/." || temp == "/") continue;
+        if(temp == "/.."){
+            if(!save.empty())
+                save.pop();
+            continue;
+        }
+        save.push(temp);
+    }
+    string out = "";
+    while (!save.empty())
+    {
+        out.insert(0, save.top());
+        save.pop();
+    }
     return 0;
 }
