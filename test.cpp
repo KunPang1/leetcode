@@ -2,37 +2,61 @@
 #include <queue>
 #include <stack>
 #include <vector>
+#include <unordered_map>
 
 using namespace std;
 
 class Solution {
 public:
-    int largestRectangleArea(vector<int>& heights) {
-        stack<int> save;
-        save.push(-1);
-        int maxarea = 0;
-        for(int i = 0; i < heights.size(); ++i){
-            while(save.top() != -1 && heights[save.top()] >= heights[i]){
-                int index = save.top();
-                save.pop();
-                maxarea = max(maxarea, heights[index] * (i - save.top() - 1));
+    int numberOfSubarrays(vector<int>& nums, int k) {
+        int n = nums.size();
+        int left = 0, right = 0;
+        unordered_map<int, int> windows;
+        int out = 0;
+        int match = 0;
+        while(right < nums.size()){
+            int c1 = nums[right];
+            if(c1 % 2 == 1){
+                if(match == k){
+                    out++;
+                    while(true){
+                        int c2 = nums[left];
+                        if(c2 % 2 == 1){
+                            out++;
+                            windows[c2]--;
+                            left++;
+                            windows[c1]++;
+                            right++;
+                            break;
+                        }
+                        else{
+                            out++;
+                            windows[c2]--;
+                            left++;
+                        }
+                    }
+                }
+                else{
+                    windows[c1]++;
+                    right++;
+                    match++;
+                }
             }
-            save.push(i);
+            else{
+                if(match == k)
+                    out++;
+                windows[c1]++;
+                right++;
+            }
         }
-        while(save.top() != -1){
-            int index = save.top();
-            save.pop();
-            int area = heights[index] * (heights.size() - save.top() - 1);
-            maxarea = max(maxarea, area);
-        }
-        return maxarea;
+        return out;
     }
 };
 
 int main(){
-    vector<int> heights = {2,1,5,6,2,3};
+    vector<int> heights = {2,2,2,1,2,2,1,2,2,2};
     Solution pro;
-    auto x = pro.largestRectangleArea(heights);
+    auto x = pro.numberOfSubarrays(heights, 2);
     cout << x << endl;
     return 0;
 }

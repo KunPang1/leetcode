@@ -51,6 +51,34 @@ public:
 };
 ```
 
+LeetCode 94题，直接用二叉树中序遍历即可，递归非递归都行
+
+LeetCode 95题，不同的二叉搜索树II，后序遍历
+
+```c++
+    vector<TreeNode*> helper(int start, int end){
+        vector<TreeNode*> all_trees;
+        if(start > end){
+            all_trees.push_back(NULL);
+            return all_trees;
+        }
+        for(int i = start; i <= end; ++i){
+            vector<TreeNode*> left_trees = helper(start, i - 1);
+            vector<TreeNode*> right_trees = helper(i + 1, end);
+
+            for(TreeNode* l : left_trees){
+                for(TreeNode* r : right_trees){
+                    TreeNode* current_tree = new TreeNode(i);
+                    current_tree->left = l;
+                    current_tree->right = r;
+                    all_trees.push_back(current_tree);
+                }
+            }
+        }
+        return all_trees;
+    }
+```
+
 LeetCode 105题， 根据前序遍历和中序遍历还原二叉树
 
 ```c++

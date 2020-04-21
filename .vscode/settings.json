@@ -25,6 +25,7 @@
         "xiosbase": "cpp",
         "xstring": "cpp",
         "xtree": "cpp",
-        "thread": "cpp"
+        "thread": "cpp",
+        "string_view": "cpp"
     }
 }
