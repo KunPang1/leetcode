@@ -79,6 +79,39 @@ LeetCode 95题，不同的二叉搜索树II，后序遍历
     }
 ```
 
+Leetcode 199题，二叉树的右视图
+前序遍历即可
+```c++
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    void helper(TreeNode* root, vector<int>& save, int& height){
+        if(!root) return;
+        if(height == save.size()) save.push_back(root->val); //如果当前深度没有点，则插入
+        else save[height] = root->val;  // 如果当前深度有点，则更新
+        height++;
+        helper(root->left, save, height);
+        helper(root->right, save, height);
+        height--;
+        return;
+    }
+    vector<int> rightSideView(TreeNode* root) {
+        vector<int> save;
+        int height = 0;
+        helper(root, save, height);
+        return save;
+    }
+};
+```
+
 LeetCode 105题， 根据前序遍历和中序遍历还原二叉树
 
 ```c++

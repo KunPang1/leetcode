@@ -1,52 +1,33 @@
-#include <iostream>
-#include <queue>
-#include <stack>
+#include<iostream>
 #include <vector>
-#include <unordered_map>
 
 using namespace std;
 
 class Solution {
 public:
-    int numberOfSubarrays(vector<int>& nums, int k) {
-        int n = nums.size();
-        int left = 0, right = 0;
-        unordered_map<int, int> windows;
-        int out = 0;
-        int match = 0;
-        while(right < nums.size()){
-            int c1 = nums[right];
-            if(c1 % 2 == 1){
-                if(match == k){
-                    out++;
-                    while(true){
-                        int c2 = nums[left];
-                        if(c2 % 2 == 1){
-                            out++;
-                            windows[c2]--;
-                            left++;
-                            windows[c1]++;
-                            right++;
-                            break;
-                        }
-                        else{
-                            out++;
-                            windows[c2]--;
-                            left++;
-                        }
-                    }
-                }
-                else{
-                    windows[c1]++;
-                    right++;
-                    match++;
-                }
+    string convert(string s, int numRows) {
+        int len = s.size();
+        int res = len % (2 * numRows - 2);
+        res = res > numRows ? res - numRows + 1 : 1;
+        int c = (int)(len / (2 * numRows - 2)) + res;
+        vector<vector<int>> save(numRows, vector<int>(c, 0));
+        int x = 0, y = 0;
+        for(int i = 0; i < s.size(); ++i){
+            save[x][y] = i + 1;
+            if(i % (2 * numRows - 2) < numRows){
+                x++;
             }
             else{
-                if(match == k)
-                    out++;
-                windows[c1]++;
-                right++;
+                y++;
+                x--;
+            }
+        }
+        string out = "";
+        for(int i = 0; i < res; ++i){
+            for(int j = 0; j < c; ++j){
+                if(save[i][j] != 0){
+                    out.push_back(s[save[i][j] - 1]);
+                }
             }
         }
         return out;
@@ -54,9 +35,9 @@ public:
 };
 
 int main(){
-    vector<int> heights = {2,2,2,1,2,2,1,2,2,2};
+    int n;
+    int sum;
     Solution pro;
-    auto x = pro.numberOfSubarrays(heights, 2);
-    cout << x << endl;
+    auto a = pro.convert("LEETCODEISHIRING", 4);
     return 0;
 }
