@@ -1,43 +1,36 @@
-#include<iostream>
+// pointer to functions
+#include <iostream>
 #include <vector>
-
+#include <algorithm>
+#include<numeric>
+#include <unordered_map>
 using namespace std;
 
 class Solution {
 public:
-    string convert(string s, int numRows) {
-        int len = s.size();
-        int res = len % (2 * numRows - 2);
-        res = res > numRows ? res - numRows + 1 : 1;
-        int c = (int)(len / (2 * numRows - 2)) + res;
-        vector<vector<int>> save(numRows, vector<int>(c, 0));
-        int x = 0, y = 0;
-        for(int i = 0; i < s.size(); ++i){
-            save[x][y] = i + 1;
-            if(i % (2 * numRows - 2) < numRows){
-                x++;
+    int subarraysDivByK(vector<int>& A, int K) {
+        unordered_map<int, int> record = {{0, 1}};
+        int sum = 0, ans = 0;
+        for (int elem: A) {
+            sum += elem;
+            // 注意 C++ 取模的特殊性，当被除数为负数时取模结果为负数，需要纠正
+            int modulus = (sum % K + K) % K;
+            if (record.count(modulus)) {
+                ans += record[modulus];
             }
-            else{
-                y++;
-                x--;
-            }
+            ++record[modulus];
         }
-        string out = "";
-        for(int i = 0; i < res; ++i){
-            for(int j = 0; j < c; ++j){
-                if(save[i][j] != 0){
-                    out.push_back(s[save[i][j] - 1]);
-                }
-            }
-        }
-        return out;
+        return ans;
     }
 };
 
-int main(){
-    int n;
-    int sum;
-    Solution pro;
-    auto a = pro.convert("LEETCODEISHIRING", 4);
-    return 0;
+int main ()
+{
+  string v1 = "eleetminicoworoep";
+  vector<int> v{4,5,0,-2,-3,1};
+  Solution pro;
+  auto x = pro.subarraysDivByK(v, 5);
+  cout << x << endl;
+  
+  return 0;
 }
