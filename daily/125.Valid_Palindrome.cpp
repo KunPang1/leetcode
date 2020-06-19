@@ -8,18 +8,15 @@ class Solution
 public:
     bool isPalindrome(string s)
     {
-        string temp = "";
-        for (char c : s)
-        {
-            if (!isalpha(c))
-            {
-                temp += tolower(c);
-            }
-        }
-        int l = 0, r = temp.length() - 1;
+        int l = 0, r = s.length() - 1;
         for (; l <= r; l++, r--)
         {
-            if (temp[l] != temp[r])
+            while (!isalnum(s[l]) && l <= r)
+                l++;
+            while (!isalnum(s[r]) && l <= r)
+                r--;
+            if (l > r) break;
+            if (tolower(s[l]) != tolower(s[r]))
                 return false;
         }
         return true;
@@ -29,7 +26,7 @@ public:
 int main()
 {
     string str;
-    cin >> str;
+    getline(cin, str);
     Solution solver;
     bool res = solver.isPalindrome(str);
     cout << res << endl;
