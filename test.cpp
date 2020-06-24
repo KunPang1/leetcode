@@ -1,49 +1,34 @@
 // set::emplace
 #include <iostream>
-#include <set>
-#include <string>
-#include <vector>
-#include <unordered_map>
-#include <unordered_set>
-#include <queue>
-#include <math.h>
-#include <algorithm>
 #include <numeric>
-#include <stack>
+#include <math.h>
+#include <string>
 
 using namespace std;
 
 class Solution {
 public:
-    int maxScoreSightseeingPair(vector<int>& A) {
-        stack<int> st1;
-        st1.push(-1);
-        int score = 0;
-        for(int i = 0; i < A.size(); ++i){
-            while(st1.top() != -1 && A[st1.top()] < A[i]){
-                int temp = st1.top();
-                st1.pop();
-                if(st1.top() == -1) continue;
-                score = max(score, A[st1.top()] + A[temp] + st1.top() - temp);
+    int fib(int N) {
+        int count = 0;
+        for(int i = 1; i <= N; ++i){
+            double goldenRatio = (1 + sqrt(5)) / 2;
+            int num = (int)round(pow(goldenRatio, N)/ sqrt(5));
+            string temp = to_string(num);
+            for(char x : temp){
+                if(x == '1')
+                    count++;
             }
-            st1.push(i);
         }
-        while(st1.top() != -1){
-            int temp = st1.top();
-            st1.pop();
-            if(st1.top() != -1) break;
-            score = max(score, A[st1.top()] + A[temp] + st1.top() - temp);
-        }
-        return score;
+        return count;
     }
 };
 
 int main()
 {
-    vector<string> temp{"eat", "tea", "tan", "ate", "nat", "bat"};
-
-    vector<int> A({1, 2});
+    int n;
+    cin >> n;
     Solution pro;
-    auto x = pro.maxScoreSightseeingPair(A);
+    int x = pro.fib(n);
+    cout << x << endl;
     return 0;
 }
