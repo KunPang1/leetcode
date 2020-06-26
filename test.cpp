@@ -1,73 +1,42 @@
-// set::emplace
+#include <tuple>
 #include <iostream>
-#include <numeric>
-#include <math.h>
-#include <string>
-#include <vector>
 
-using namespace std;
+auto get_student(int id)
+{
+// 返回类型被推断为 std::tuple<double, char, std::string>
 
-class Solution {
-    vector<int> res;
-    void backtracking(vector<int>& input, vector<char>& opt) {
-        if (input.size() == 2)
-        {
-            if (opt[0] == '+')
-                res.emplace_back(input[0] + input[1]);
-            else if (opt[0] == '-')
-                res.emplace_back(input[0] - input[1]);
-            else if (opt[0] == '*')
-                res.emplace_back(input[0] * input[1]);
-            return;
-        }
-        int n = opt.size();
-        for (int i = 0; i < n; i++) {
-            int i1 = input[i], i2 = input[i+1];
-            char o1 = opt[i];
-            int temp;
-            if (opt[i] == '+')
-                temp = input[i] + input[i + 1];
-            else if (opt[i] == '-')
-                temp = input[i] - input[i + 1];
-            else if (opt[i] == '*')
-                temp = input[i] * input[i + 1];
-
-            input[i] = temp;
-            input.erase(input.begin() + i + 1);
-            opt.erase(opt.begin() + i);
-
-            backtracking(input, opt);
-            
-            input[i] = i1;
-            input.insert(input.begin() + i + 1, i2);
-            opt.insert(opt.begin() + i, o1);
-        }
-    }
-public:
-    vector<int> diffWaysToCompute(string input) {
-        if (input.size() == 0) return {};
-        vector<int> save;
-        vector<char> opt;
-        for (int i = 0; i < input.size(); ++i) {
-            int temp = 0;
-            while (i < input.size() && isdigit(input[i])) {
-                temp = temp * 10 + input[i] - '0';
-                i++;
-            }
-            save.push_back(temp);
-            if (i == input.size()) break;
-            opt.push_back(input[i]);
-        }
-        backtracking(save, opt);
-        return res;
-    }
-};
+if (id == 0)
+    return std::make_tuple(3.8, 'A', "张三");
+if (id == 1)
+    return std::make_tuple(2.9, 'C', "李四");
+if (id == 2)
+    return std::make_tuple(1.7, 'D', "王五");
+    
+return std::make_tuple(0.0, 'D', "null");
+    // 如果只写 0 会出现推断错误, 编译失败
+}
 
 int main()
 {
-    Solution pro;
-    auto x = pro.diffWaysToCompute("2*3-4*5");
-    for (int i = 0; i < x.size(); ++i)
-        cout << x[i] << endl;
-    return 0;
+    auto student = get_student(0);
+    std::cout << "ID: 0, "
+    << "GPA: " << std::get<0>(student) << ", "
+    << "成绩: " << std::get<1>(student) << ", "
+    << "姓名: " << std::get<2>(student) << '\n';
+
+    double gpa;
+    char grade;
+    std::string name;
+
+    // 元组进行拆包
+    std::tie(gpa, grade, name) = get_student(1);
+    std::cout << "ID: 1, "
+    << "GPA: " << gpa << ", "
+    << "成绩: " << grade << ", "
+    << "姓名: " << name << '\n';
+
+    std::tuple<std::string, double, double, int> t("123", 4.5, 6.7, 8);
+    std::cout << std::get<std::string>(t) << std::endl;
+    // std::cout << std::get<double>(t) << std::endl; // 非法, 引发编译期错误
+    std::cout << std::get<3>(t) << std::endl;
 }
