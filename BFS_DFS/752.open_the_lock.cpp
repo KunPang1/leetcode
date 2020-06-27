@@ -1,4 +1,3 @@
-#include <tuple>
 #include <iostream>
 #include <unordered_set>
 #include <unordered_map>
@@ -10,6 +9,39 @@ using namespace std;
 
 class Solution {
 public:
+    // 官方题解, BFS
+    int openLock(vector<string>& deadends, string target) {
+        int ex[2] = {1, -1};
+        if (target == "0000") return 0;
+        unordered_set<string> killed(deadends.begin(), deadends.end());
+        if (killed.count("0000")) return -1;
+        
+        unordered_map<string, int> memo;
+        queue<string> q;
+        q.push("0000");
+        memo["0000"] = 0;
+        while (!q.empty()){
+            string str = q.front();
+            int num = memo[str];
+            q.pop();
+            for (int i = 0; i < 4; ++i) {
+                for (int j : ex) {
+                    string temp = str;
+                    temp[i] = (temp[i] + j - '0') >= 0 ? (temp[i] + j - '0') % 10 + '0' : '9';
+                    if (temp == target) return num+1;
+                    if (!killed.count(temp) && !memo.count(temp)) {
+                        memo[temp] = num + 1;
+                        q.push(temp);
+                    }
+                }
+            }
+        }
+        return memo.count(target) == 1 ? memo[target] : -1;
+    }
+
+    // 大神题解, 我自己解释一下, 只要没有8个dead的密码包住target
+    // 就可以解锁. 然后就是先找相邻的8个密码, 然后去掉dead里的密码,
+    // 从剩下的数字计算转到 0000 的最少次数.
     vector<string> getValidMoves(const string& sequence) 
     {
         vector<string> moves;
@@ -25,7 +57,7 @@ public:
         return moves;
     }
     
-    int openLock(vector<string>& deadends, string target) {
+    int openLock1(vector<string>& deadends, string target) {
         unordered_set<string> deadset(deadends.begin(), deadends.end());
         if (deadset.count("0000")) 
         {
@@ -69,8 +101,14 @@ public:
 
 int main()
 {
-    vector<string> deadends({"0201","0101","0102","1212","2002"});
-    string target = "0202";
+    vector<string> deadends;
+    string target;
+    string temp;
+    while (cin >> temp) {
+        deadends.push_back(temp);
+        if (cin.get() == '\n') break;
+    }
+    cin >> target;
     Solution solver;
     auto x = solver.openLock(deadends, target);
     cout << x << endl;
