@@ -259,7 +259,9 @@ public:
 int main(){
     vector<int> v1 = {5, 3, 5, 6, 4, 12, 343, 5, 3, 1, 3, 343, 4, 3, 5, 4, 6, 5, 34324, 2, 45, 2, 52, 6, 34, 6, 56, 3, 4, 32, 1, 5, 1, 3};
     Solution pro;
-    auto x = pro.ShellSort(v1);
-    // cout << x << endl;
+    auto x = pro.sortArray_heap(v1);
+    for (auto temp : x)
+        cout << temp << " ";
+    cout << endl;
     return 0;
 }
