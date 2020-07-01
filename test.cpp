@@ -1,78 +1,57 @@
-#include <tuple>
 #include <iostream>
-#include <unordered_set>
-#include <unordered_map>
 #include <vector>
-#include <string>
-#include <queue>
 
 using namespace std;
 
-class Solution {
-public:
-    vector<string> getValidMoves(const string& sequence) 
+int LongestPalindromicSubstring(string &a)
+{
+    int len = a.length();
+    vector<vector<int>> dp(len, vector<int>(len, 0));
+    for (int i = 0; i < len; i++)
     {
-        vector<string> moves;
-        for (int i = 0; i < 4; i++)
-        {
-            string temp = sequence;                         // +1
-            temp[i] = temp[i] == '9' ? '0' : temp[i] + 1;
-            moves.push_back(temp);
-            temp = sequence;                                // -1
-            temp[i] = temp[i] == '0' ? '9' : temp[i] - 1;
-            moves.push_back(temp);
-        }
-        return moves;
+        dp[i][i] = 1;
     }
-    
-    int openLock(vector<string>& deadends, string target) {
-        unordered_set<string> deadset(deadends.begin(), deadends.end());
-        if (deadset.count("0000")) 
+    int max_len = 1;
+    int start_index = 0;
+    for (int i = len - 2; i >= 0; i--)
+    {
+        for (int j = i + 1; j < len; j++)
         {
-            return -1;
-        }
-        vector<string> movesToTarget;
-        auto moves = getValidMoves(target);
-        for (auto& move : moves) 
-        {
-            if (!deadset.count(move)) 
+            if (a[i] == a[j])
             {
-                movesToTarget.push_back(move);
-            }
-        }
-
-        if (movesToTarget.empty())              // 可以直接从deadends中看出target可不可达
-        {
-            return -1;
-        }
-        int min_stride = 40;                // 最大步长是40步（每位转动10次）
-        for (auto& move : movesToTarget)        // 计算到达每个可达结果的步长，取最小
-        {
-            int cur_stride = 0;
-            for (int i = 0; i < 4; ++i) 
-            {
-                int turns = move[i] - '0';
-                if (turns > 5)                  // 可以倒着转，所以转动次数不会大过5
+                if (j - i == 1)
                 {
-                    turns = 10 - turns;
+                    dp[i][j] = 2;
                 }
-                cur_stride += turns;
+                else
+                {
+                    if (j - i > 1)
+                    {
+                        dp[i][j] = dp[i + 1][j - 1] + 2;
+                    }
+                }
+                if (max_len < dp[i][j])
+                {
+                    max_len = dp[i][j];
+                    start_index = i;
+                }
             }
-            if (cur_stride < min_stride) 
+            else
             {
-                min_stride = cur_stride;
+                dp[i][j] = 0;
             }
         }
-        return min_stride + 1;                  // 最后加上到达target的那一步
     }
-};
+    cout << "max len is " << max_len << endl;
+    cout << "star index is" << start_index << endl;
+    return max_len;
+}
 
 int main()
 {
-    vector<string> deadends({"0201","0101","0102","1212","2002"});
-    string target = "0202";
+    vector<int> nums = {3, 1, 5, 8};
     Solution solver;
-    auto x = solver.openLock(deadends, target);
+    auto x = solver.maxCoins(nums);
     cout << x << endl;
     return 0;
 }
