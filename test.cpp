@@ -1,57 +1,38 @@
 #include <iostream>
 #include <vector>
+#include <algorithm>
+#include <numeric>
 
 using namespace std;
 
-int LongestPalindromicSubstring(string &a)
-{
-    int len = a.length();
-    vector<vector<int>> dp(len, vector<int>(len, 0));
-    for (int i = 0; i < len; i++)
-    {
-        dp[i][i] = 1;
-    }
-    int max_len = 1;
-    int start_index = 0;
-    for (int i = len - 2; i >= 0; i--)
-    {
-        for (int j = i + 1; j < len; j++)
-        {
-            if (a[i] == a[j])
-            {
-                if (j - i == 1)
-                {
-                    dp[i][j] = 2;
-                }
-                else
-                {
-                    if (j - i > 1)
-                    {
-                        dp[i][j] = dp[i + 1][j - 1] + 2;
-                    }
-                }
-                if (max_len < dp[i][j])
-                {
-                    max_len = dp[i][j];
-                    start_index = i;
-                }
+class Solution {
+public:
+    string getPermutation(int n, int k) {
+        string res = "";
+        vector<int> num(10);
+        iota(num.begin(), num.end(), 1);
+        for (int i = 0; i < n; ++i) {
+            int temp = 1, j = n - i - 1;
+            while (j > 0) {
+                temp = temp * j;
+                j--;
             }
-            else
-            {
-                dp[i][j] = 0;
-            }
+            int ans = k / temp;
+            if (k != 0 && k % temp == 0) ans -= 1;
+            char tmp = num[ans] + '0';
+            res += tmp;
+            num.erase(num.begin()+ans);
+            k -= ans * temp;
+            if (ans == 0) k = 0;
         }
+        return res;
     }
-    cout << "max len is " << max_len << endl;
-    cout << "star index is" << start_index << endl;
-    return max_len;
-}
+};
 
-int main()
-{
-    vector<int> nums = {3, 1, 5, 8};
+int main() {
+    vector<int> nums = {100,4,200,1,3,2};
     Solution solver;
-    auto x = solver.maxCoins(nums);
+    auto x = solver.getPermutation(3, 2);
     cout << x << endl;
     return 0;
 }
